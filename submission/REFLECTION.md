@@ -2,8 +2,34 @@
 
 **Tên:** _<Họ Tên>_
 **Cohort:** _<A20-K1 / A20-K2 / ...>_
-**Tier đã chạy:** _<T4 | BIGGPU | both>_
-**Date:** _<YYYY-MM-DD>_
+**Tier đã chạy:** T4 (Kaggle Tesla T4 + Google Colab T4)
+**Date:** 2026-08-24
+
+---
+
+> ## ⚠ Trạng thái nộp bài — đọc trước
+>
+> **NB1 và NB2 đã hoàn tất và verify được. NB3 (DPO training) CHƯA hoàn tất.**
+> NB4/NB5/NB6 chưa có kết quả.
+>
+> Chi tiết đầy đủ, kèm log gốc: **[`RUN-REPORT.md`](RUN-REPORT.md)**.
+>
+> Tóm tắt:
+> - Lab có **3 lỗi thật** khiến notebook không chạy được như đã ship: dataset SFT
+>   trả HTTP 401 (repo private/đã xóa), Qwen2.5 base không có `chat_template`, và
+>   Unsloth chọn backend xformers trên sm_75 mà kernel backward của nó không hỗ
+>   trợ layout BMGHK của grouped-query attention. Cả 3 đã được chẩn đoán và fix —
+>   xem RUN-REPORT §3.
+> - Sau khi fix, DPO chạy **đúng cấu hình** (2000 pairs → 250 steps, batch 1 ×
+>   grad_accum 8, β=0.1, lr=5e-7, LoRA r=16/α=32), đo được **14.65 s/it** trên T4
+>   với SDPA. Runtime bị thu hồi ở khoảng step 61–100/250; `save_strategy="no"`
+>   nên không có checkpoint để resume.
+> - **Không có hyperparameter nào bị giảm để chạy cho kịp.**
+> - `adapters/dpo/`, `03-dpo-reward-curves.png`, `04-side-by-side-table.png`
+>   **cố ý không nộp**. Các lần chạy trước có sinh ra file trùng tên trông hợp lệ,
+>   nhưng adapter chưa nhận một gradient update nào và `dpo_metrics.json` báo
+>   nhầm loss của SFT thành loss của DPO (`end_reward_gap: null` là dấu hiệu duy
+>   nhất lộ ra). Nộp chúng sẽ là bịa kết quả.
 
 ---
 

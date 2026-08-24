@@ -1,0 +1,977 @@
+/usr/local/lib/python3.12/dist-packages/nbformat/__init__.py:96: MissingIDFieldWarning: Cell is missing an id field, this will become a hard error in future nbformat versions. You may want to use `normalize()` on your notebooks before validations (available since nbformat 5.1.4). Previous versions of nbformat are fixing this issue transparently, and will stop doing so in the future.
+  validate(nb)
+0.00s - Debugger warning: It seems that frozen modules are being used, which may
+0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off
+0.00s - to python to disable frozen modules.
+0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.
+0.00s - Debugger warning: It seems that frozen modules are being used, which may
+0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off
+0.00s - to python to disable frozen modules.
+0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.
+[     0.0s] env: {'COMPUTE_TIER': 'T4', 'SFT_SLICE': '200', 'PREF_SLICE': '500', 'LIMIT_IFEVAL': '4', 'LIMIT_GSM8K': '4', 'LIMIT_MMLU': '2', 'LIMIT_ALPACA': '4', 'LMEVAL_TIMEOUT': '1800', 'BIG_ARTIFACT_ROOT': '/kaggle/temp/big', 'NEED_LMEVAL': '1', 'NEED_LLAMACPP': '1'}
+Mon Aug 24 13:01:09 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 580.159.04             Driver Version: 580.159.04     CUDA Version: 13.0     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  Tesla P100-PCIE-16GB           Off |   00000000:00:04.0 Off |                    0 |
+| N/A   36C    P0             26W /  250W |       0MiB /  16384MiB |      0%      Default |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+Mon Aug 24 13:01:09 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 580.159.04             Driver Version: 580.159.04     CUDA Version: 13.0     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  Tesla P100-PCIE-16GB           Off |   00000000:00:04.0 Off |                    0 |
+| N/A   36C    P0             26W /  250W |       0MiB /  16384MiB |      0%      Default |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+[     0.1s] pip --upgrade pip
+[     6.1s] pip unsloth>=2025.10,<2026.5 unsloth_zoo trl>=0.12,<0.20 peft>=0.13,<1.0 bitsandbytes>=0.44,<1.0 datasets>=3.1,<4.0 accelerate>=1.1,<2.0 transformers>=4.46,<5.0 matplotlib>=3.9,<4.0 pandas>=2.2,<3.0 pyarrow>=17,<22
+[    33.6s] pip nbclient>=0.10 nbformat>=5.10
+[    35.9s] pip lm-eval[ifeval,math]>=0.4.5,<1.0
+[    57.2s] pip llama-cpp-python>=0.3,<1.0
+[   369.5s] torch          2.10.0+cu128
+[   373.6s] transformers   4.57.6
+[   373.6s] trl            0.19.1
+Skipping import of cpp extensions due to incompatible torch version. Please upgrade to torch >= 2.11.0 (found 2.10.0+cu128).
+
+Skipping import of cpp extensions due to incompatible torch version. Please upgrade to torch >= 2.11.0 (found 2.10.0+cu128).
+/usr/local/lib/python3.12/dist-packages/torch/cuda/__init__.py:435: UserWarning: 
+    Found GPU0 Tesla P100-PCIE-16GB which is of cuda capability 6.0.
+    Minimum and Maximum cuda capability supported by this version of PyTorch is
+    (7.0) - (12.0)
+    
+  queued_call()
+/usr/local/lib/python3.12/dist-packages/torch/cuda/__init__.py:435: UserWarning: 
+    Please install PyTorch with a following CUDA
+    configurations:  12.6 following instructions at
+    https://pytorch.org/get-started/locally/
+    
+  queued_call()
+/usr/local/lib/python3.12/dist-packages/torch/cuda/__init__.py:435: UserWarning: 
+Tesla P100-PCIE-16GB with CUDA capability sm_60 is not compatible with the current PyTorch installation.
+The current PyTorch install supports CUDA capabilities sm_70 sm_75 sm_80 sm_86 sm_90 sm_100 sm_120.
+If you want to use the Tesla P100-PCIE-16GB GPU with PyTorch, please check the instructions at https://pytorch.org/get-started/locally/
+
+  queued_call()
+
+/usr/local/lib/python3.12/dist-packages/torch/cuda/__init__.py:435: UserWarning: 
+    Found GPU0 Tesla P100-PCIE-16GB which is of cuda capability 6.0.
+    Minimum and Maximum cuda capability supported by this version of PyTorch is
+    (7.0) - (12.0)
+    
+  queued_call()
+/usr/local/lib/python3.12/dist-packages/torch/cuda/__init__.py:435: UserWarning: 
+    Please install PyTorch with a following CUDA
+    configurations:  12.6 following instructions at
+    https://pytorch.org/get-started/locally/
+    
+  queued_call()
+/usr/local/lib/python3.12/dist-packages/torch/cuda/__init__.py:435: UserWarning: 
+Tesla P100-PCIE-16GB with CUDA capability sm_60 is not compatible with the current PyTorch installation.
+The current PyTorch install supports CUDA capabilities sm_70 sm_75 sm_80 sm_86 sm_90 sm_100 sm_120.
+If you want to use the Tesla P100-PCIE-16GB GPU with PyTorch, please check the instructions at https://pytorch.org/get-started/locally/
+
+  queued_call()
+[   398.4s] peft           0.19.1
+🦥 Unsloth: Will patch your computer to enable 2x faster free finetuning.
+/tmp/ipykernel_23/3375355627.py:48: UserWarning: WARNING: Unsloth should be imported before [trl, transformers, peft] to ensure all optimizations are applied. Your code may run slower or encounter memory issues without these optimizations.
+
+Please restructure your imports with 'import unsloth' at the top of your file.
+  m = __import__(mod)
+
+/tmp/ipykernel_23/3375355627.py:48: UserWarning: WARNING: Unsloth should be imported before [trl, transformers, peft] to ensure all optimizations are applied. Your code may run slower or encounter memory issues without these optimizations.
+
+Please restructure your imports with 'import unsloth' at the top of your file.
+  m = __import__(mod)
+🦥 Unsloth Zoo will now patch everything to make training faster!
+[   424.3s] unsloth        2026.4.8
+[   424.3s] bitsandbytes   0.50.1
+[   424.3s] datasets       3.6.0
+[   426.1s] loaded 136 cells
+0.00s - Debugger warning: It seems that frozen modules are being used, which may
+0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off
+0.00s - to python to disable frozen modules.
+0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.
+0.00s - Debugger warning: It seems that frozen modules are being used, which may
+0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off
+0.00s - to python to disable frozen modules.
+0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.
+
+0.00s - Debugger warning: It seems that frozen modules are being used, which may
+0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off
+0.00s - to python to disable frozen modules.
+0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.
+[   427.5s] ===== CELL 2/135  # Set tier early — every downstream cell reads this.
+COMPUTE_TIER set to T4
+[   427.5s] ===== CELL 3/135  # [kaggle] deps are installed by the outer Kaggle cell before this kernel starts.
+deps: installed by Kaggle runner cell (skipped here)
+[   427.5s] ===== CELL 4/135  # Probe GPU
+GPU: Tesla P100-PCIE-16GB  (17.1 GB)
+/usr/local/lib/python3.12/dist-packages/torch/cuda/__init__.py:435: UserWarning: 
+    Found GPU0 Tesla P100-PCIE-16GB which is of cuda capability 6.0.
+    Minimum and Maximum cuda capability supported by this version of PyTorch is
+    (7.0) - (12.0)
+    
+  queued_call()
+/usr/local/lib/python3.12/dist-packages/torch/cuda/__init__.py:435: UserWarning: 
+    Please install PyTorch with a following CUDA
+    configurations:  12.6 following instructions at
+    https://pytorch.org/get-started/locally/
+    
+  queued_call()
+/usr/local/lib/python3.12/dist-packages/torch/cuda/__init__.py:435: UserWarning: 
+Tesla P100-PCIE-16GB with CUDA capability sm_60 is not compatible with the current PyTorch installation.
+The current PyTorch install supports CUDA capabilities sm_70 sm_75 sm_80 sm_86 sm_90 sm_100 sm_120.
+If you want to use the Tesla P100-PCIE-16GB GPU with PyTorch, please check the instructions at https://pytorch.org/get-started/locally/
+
+  queued_call()
+[   429.3s] ===== CELL 5/135  # [kaggle] working directory under /kaggle/working so it lands in kernel output
+Working dir: /kaggle/working/lab22/notebooks
+[   429.4s] ===== CELL 10/135  import os
+COMPUTE_TIER:    T4
+BASE_MODEL:      unsloth/Qwen2.5-3B-bnb-4bit
+SFT_DATASET:     5CD-AI/Vietnamese-alpaca-cleaned  (slice: 200)
+max_seq_length:  512
+effective batch: 8
+output:          /kaggle/working/lab22/adapters/sft-mini
+[   429.4s] ===== CELL 11/135  import torch
+GPU: Tesla P100-PCIE-16GB  (17.1 GB)
+[   429.4s] ===== CELL 13/135  from unsloth import FastLanguageModel
+🦥 Unsloth: Will patch your computer to enable 2x faster free finetuning.
+🦥 Unsloth Zoo will now patch everything to make training faster!
+==((====))==  Unsloth 2026.4.8: Fast Qwen2 patching. Transformers: 4.57.6.
+   \\   /|    Tesla P100-PCIE-16GB. Num GPUs = 1. Max memory: 15.888 GB. Platform: Linux.
+O^O/ \_/ \    Torch: 2.10.0+cu128. CUDA: 6.0. CUDA Toolkit: 12.8. Triton: 3.6.0
+\        /    Bfloat16 = FALSE. FA [Xformers = 0.0.35. FA2 = False]
+ "-____-"     Free license: http://github.com/unslothai/unsloth
+Unsloth: Fast downloading is enabled - ignore downloading bars which are red colored!
+model.safetensors:   0%|          | 0.00/2.05G [00:00<?, ?B/s]
+[0mconfig.hidden_size, config.vocab_size, bias=False)
+
+/usr/local/lib/python3.12/dist-packages/transformers/models/qwen2/modeling_qwen2.py in __init__(self, config)
+    319         )
+    320         self.norm = Qwen2RMSNorm(config.hidden_size, eps=config.rms_norm_eps)
+--> 321         self.rotary_emb = Qwen2RotaryEmbedding(config=config)
+    322         self.gradient_checkpointing = False
+    323         self.has_sliding_layers = "sliding_attention" in self.config.layer_types
+
+/usr/local/lib/python3.12/dist-packages/unsloth/models/llama.py in __init__(self, dim, max_position_embeddings, base, device, config)
+   1751         # Build here to make `torch.jit.trace` work.
+   1752         for device_idx in range(DEVICE_COUNT):
+-> 1753             self._set_cos_sin_cache(
+   1754                 seq_len = self.current_rope_size,
+   1755                 device = torch.device(device_idx),
+
+/usr/local/lib/python3.12/dist-packages/unsloth/models/llama.py in _set_cos_sin_cache(self, seq_len, device, dtype)
+   1785         # Different from paper, but it uses a different permutation in order to obtain the same calculation
+   1786         emb = torch.cat((freqs, freqs), dim = -1)
+-> 1787         cos = emb.cos().to(dtype = dtype, device = device, non_blocking = True)
+   1788         sin = emb.sin().to(dtype = dtype, device = device, non_blocking = True)
+   1789         self.multi_gpu_cos_cached[device.index] = cos
+
+AcceleratorError: CUDA error: no kernel image is available for execution on the device
+Search for `cudaErrorNoKernelImageForDevice' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+
+[   474.6s] ===== CELL 14/135  model = FastLanguageModel.get_peft_model(
+---------------------------------------------------------------------------
+NameError                                 Traceback (most recent call last)
+/tmp/ipykernel_1509/515739446.py in <cell line: 0>()
+      1 model = FastLanguageModel.get_peft_model(
+----> 2     model,
+      3     r=16,
+      4     lora_alpha=32,
+      5     lora_dropout=0.0,           # Unsloth supports dropout=0 for free speed
+
+NameError: name 'model' is not defined
+[   474.6s] ===== CELL 16/135  from datasets import load_dataset
+b/python3.12/dist-packages/datasets/load.py in load_dataset(path, name, data_dir, data_files, split, cache_dir, features, download_config, download_mode, verification_mode, keep_in_memory, save_infos, revision, token, streaming, num_proc, storage_options, trust_remote_code, **config_kwargs)
+   2060 
+   2061     # Create a dataset builder
+-> 2062     builder_instance = load_dataset_builder(
+   2063         path=path,
+   2064         name=name,
+
+/usr/local/lib/python3.12/dist-packages/datasets/load.py in load_dataset_builder(path, name, data_dir, data_files, cache_dir, features, download_config, download_mode, revision, token, storage_options, trust_remote_code, _require_default_config_name, **config_kwargs)
+   1780         download_config = download_config.copy() if download_config else DownloadConfig()
+   1781         download_config.storage_options.update(storage_options)
+-> 1782     dataset_module = dataset_module_factory(
+   1783         path,
+   1784         revision=revision,
+
+/usr/local/lib/python3.12/dist-packages/datasets/load.py in dataset_module_factory(path, revision, download_config, download_mode, dynamic_modules_path, data_dir, data_files, cache_dir, trust_remote_code, _require_default_config_name, _require_custom_configs, **download_kwargs)
+   1650                     raise ConnectionError(f"Couldn't reach the Hugging Face Hub for dataset '{path}': {e1}") from None
+   1651                 if isinstance(e1, (DataFilesNotFoundError, DatasetNotFoundError, EmptyDatasetError)):
+-> 1652                     raise e1 from None
+   1653                 if isinstance(e1, FileNotFoundError):
+   1654                     if trust_remote_code:
+
+/usr/local/lib/python3.12/dist-packages/datasets/load.py in dataset_module_factory(path, revision, download_config, download_mode, dynamic_modules_path, data_dir, data_files, cache_dir, trust_remote_code, _require_default_config_name, _require_custom_configs, **download_kwargs)
+   1576                 ) from e
+   1577             except RepositoryNotFoundError as e:
+-> 1578                 raise DatasetNotFoundError(f"Dataset '{path}' doesn't exist on the Hub or cannot be accessed.") from e
+   1579             try:
+   1580                 dataset_script_path = api.hf_hub_download(
+
+DatasetNotFoundError: Dataset '5CD-AI/Vietnamese-alpaca-cleaned' doesn't exist on the Hub or cannot be accessed.
+[   474.7s] ===== CELL 17/135  # Alpaca → ChatML format (Qwen2.5's native template)
+---------------------------------------------------------------------------
+NameError                                 Traceback (most recent call last)
+/tmp/ipykernel_1509/3340417937.py in <cell line: 0>()
+     13 
+     14 
+---> 15 ds_formatted = ds.map(format_alpaca_to_chat, remove_columns=ds.column_names)
+     16 print(f"\nSample formatted text (first 500 chars):\n{ds_formatted[0]['text'][:500]}")
+
+NameError: name 'ds' is not defined
+[   474.7s] ===== CELL 19/135  from trl import SFTTrainer, SFTConfig
+---------------------------------------------------------------------------
+NameError                                 Traceback (most recent call last)
+/tmp/ipykernel_1509/3710032005.py in <cell line: 0>()
+     21 
+     22 trainer = SFTTrainer(
+---> 23     model=model,
+     24     processing_class=tokenizer,
+     25     args=sft_config,
+
+NameError: name 'model' is not defined
+[   474.8s] ===== CELL 20/135  train_result = trainer.train()
+---------------------------------------------------------------------------
+NameError                                 Traceback (most recent call last)
+/tmp/ipykernel_1509/2339688395.py in <cell line: 0>()
+----> 1 train_result = trainer.train()
+      2 print(f"\nFinal train loss: {train_result.training_loss:.4f}")
+
+NameError: name 'trainer' is not defined
+[   474.8s] ===== CELL 22/135  import matplotlib.pyplot as plt
+---------------------------------------------------------------------------
+NameError                                 Traceback (most recent call last)
+/tmp/ipykernel_1509/354602095.py in <cell line: 0>()
+      1 import matplotlib.pyplot as plt
+      2 
+----> 3 losses = [log["loss"] for log in trainer.state.log_history if "loss" in log]
+      4 steps = [log["step"] for log in trainer.state.log_history if "loss" in log]
+      5 
+
+NameError: name 'trainer' is not defined
+[   474.8s] ===== CELL 24/135  trainer.model.save_pretrained(str(ADAPTER_OUT))
+---------------------------------------------------------------------------
+NameError                                 Traceback (most recent call last)
+/tmp/ipykernel_1509/1335103008.py in <cell line: 0>()
+----> 1 trainer.model.save_pretrained(str(ADAPTER_OUT))
+      2 tokenizer.save_pretrained(str(ADAPTER_OUT))
+      3 print(f"Saved SFT adapter to {ADAPTER_OUT}")
+
+NameError: name 'trainer' is not defined
+[   474.9s] ===== CELL 25/135  # Sanity: generate 1 sample to confirm the adapter loaded correctly.
+---------------------------------------------------------------------------
+NameError                                 Traceback (most recent call last)
+/tmp/ipykernel_1509/1473046131.py in <cell line: 0>()
+      1 # Sanity: generate 1 sample to confirm the adapter loaded correctly.
+----> 2 FastLanguageModel.for_inference(model)
+      3 prompt = "Giải thích ngắn gọn (3-4 câu) thuật toán quicksort hoạt động thế nào."
+      4 messages = [{"role": "user", "content": prompt}]
+      5 inputs = tokenizer.apply_chat_template(
+
+NameError: name 'model' is not defined
+[   474.9s] ===== CELL 30/135  import os
+COMPUTE_TIER:    T4
+PREF_DATASET:    argilla/ultrafeedback-binarized-preferences-cleaned  (slice: 500)
+MAX_LEN:         512
+MAX_PROMPT_LEN:  256
+output:          /kaggle/working/lab22/data/pref
+[   474.9s] ===== CELL 32/135  from transformers import AutoTokenizer
+audio, data2vec-text, data2vec-vision, dbrx, deberta, deberta-v2, decision_transformer, deepseek_v2, deepseek_v3, deepseek_vl, deepseek_vl_hybrid, deformable_detr, deit, depth_anything, depth_pro, deta, detr, dia, diffllama, dinat, dinov2, dinov2_with_registers, dinov3_convnext, dinov3_vit, distilbert, doge, donut-swin, dots1, dpr, dpt, edgetam, edgetam_video, edgetam_vision_model, efficientformer, efficientloftr, efficientnet, electra, emu3, encodec, encoder-decoder, eomt, ernie, ernie4_5, ernie4_5_moe, ernie_m, esm, evolla, exaone4, falcon, falcon_h1, falcon_mamba, fastspeech2_conformer, fastspeech2_conformer_with_hifigan, flaubert, flava, flex_olmo, florence2, fnet, focalnet, fsmt, funnel, fuyu, gemma, gemma2, gemma3, gemma3_text, gemma3n, gemma3n_audio, gemma3n_text, gemma3n_vision, git, glm, glm4, glm4_moe, glm4v, glm4v_moe, glm4v_moe_text, glm4v_text, glpn, got_ocr2, gpt-sw3, gpt2, gpt_bigcode, gpt_neo, gpt_neox, gpt_neox_japanese, gpt_oss, gptj, gptsan-japanese, granite, granite_speech, granitemoe, granitemoehybrid, granitemoeshared, granitevision, graphormer, grounding-dino, groupvit, helium, hgnet_v2, hiera, hubert, hunyuan_v1_dense, hunyuan_v1_moe, ibert, idefics, idefics2, idefics3, idefics3_vision, ijepa, imagegpt, informer, instructblip, instructblipvideo, internvl, internvl_vision, jamba, janus, jetmoe, jukebox, kosmos-2, kosmos-2.5, kyutai_speech_to_text, layoutlm, layoutlmv2, layoutlmv3, led, levit, lfm2, lfm2_vl, lightglue, lilt, llama, llama4, llama4_text, llava, llava_next, llava_next_video, llava_onevision, longcat_flash, longformer, longt5, luke, lxmert, m2m_100, mamba, mamba2, marian, markuplm, mask2former, maskformer, maskformer-swin, mbart, mctct, mega, megatron-bert, metaclip_2, mgp-str, mimi, minimax, ministral, mistral, mistral3, mixtral, mlcd, mllama, mm-grounding-dino, mobilebert, mobilenet_v1, mobilenet_v2, mobilevit, mobilevitv2, modernbert, modernbert-decoder, moonshine, moshi, mpnet, mpt, mra, mt5, musicgen, musicgen_melody, mvp, nat, nemotron, nezha, nllb-moe, nougat, nystromformer, olmo, olmo2, olmo3, olmoe, omdet-turbo, oneformer, open-llama, openai-gpt, opt, ovis2, owlv2, owlvit, paligemma, parakeet_ctc, parakeet_encoder, patchtsmixer, patchtst, pegasus, pegasus_x, perceiver, perception_encoder, perception_lm, persimmon, phi, phi3, phi4_multimodal, phimoe, pix2struct, pixtral, plbart, poolformer, pop2piano, prompt_depth_anything, prophetnet, pvt, pvt_v2, qdqbert, qwen2, qwen2_5_omni, qwen2_5_vl, qwen2_5_vl_text, qwen2_audio, qwen2_audio_encoder, qwen2_moe, qwen2_vl, qwen2_vl_text, qwen3, qwen3_moe, qwen3_next, qwen3_omni_moe, qwen3_vl, qwen3_vl_moe, qwen3_vl_moe_text, qwen3_vl_text, rag, realm, recurrent_gemma, reformer, regnet, rembert, resnet, retribert, roberta, roberta-prelayernorm, roc_bert, roformer, rt_detr, rt_detr_resnet, rt_detr_v2, rwkv, sam, sam2, sam2_hiera_det_model, sam2_video, sam2_vision_model, sam_hq, sam_hq_vision_model, sam_vision_model, seamless_m4t, seamless_m4t_v2, seed_oss, segformer, seggpt, sew, sew-d, shieldgemma2, siglip, siglip2, siglip2_vision_model, siglip_vision_model, smollm3, smolvlm, smolvlm_vision, speech-encoder-decoder, speech_to_text, speech_to_text_2, speecht5, splinter, squeezebert, stablelm, starcoder2, superglue, superpoint, swiftformer, swin, swin2sr, swinv2, switch_transformers, t5, t5gemma, table-transformer, tapas, textnet, time_series_transformer, timesfm, timesformer, timm_backbone, timm_wrapper, trajectory_transformer, transfo-xl, trocr, tvlt, tvp, udop, umt5, unispeech, unispeech-sat, univnet, upernet, van, vaultgemma, video_llava, videomae, vilt, vipllava, vision-encoder-decoder, vision-text-dual-encoder, visual_bert, vit, vit_hybrid, vit_mae, vit_msn, vitdet, vitmatte, vitpose, vitpose_backbone, vits, vivit, vjepa2, voxtral, voxtral_encoder, wav2vec2, wav2vec2-bert, wav2vec2-conformer, wavlm, whisper, xclip, xcodec, xglm, xlm, xlm-prophetnet, xlm-roberta, xlm-roberta-xl, xlnet, xlstm, xmod, yolos, yoso, zamba, zamba2, zoedepth, ministral3
+[   474.9s] ===== CELL 34/135  from datasets import load_dataset
+README.md: 0.00B [00:00, ?B/s]
+data/train-00000-of-00001.parquet:   0%|          | 0.00/143M [00:00<?, ?B/s]
+Generating train split:   0%|          | 0/60917 [00:00<?, ? examples/s]
+Loaded 500 pairs. Columns: ['source', 'prompt', 'chosen', 'chosen-rating', 'chosen-model', 'rejected', 'rejected-rating', 'rejected-model']
+[   479.1s] ===== CELL 36/135  def format_pref(row):
+Map:   0%|          | 0/500 [00:00<?, ? examples/s]
+0;32mif done:
+   3081                             shards_done += 1
+
+/usr/local/lib/python3.12/dist-packages/datasets/arrow_dataset.py in _map_single(shard, function, with_indices, with_rank, input_columns, batched, batch_size, drop_last_batch, remove_columns, keep_in_memory, cache_file_name, writer_batch_size, features, disable_nullable, fn_kwargs, new_fingerprint, rank, offset, try_original_type)
+   3499                 if not batched:
+   3500                     _time = time.time()
+-> 3501                     for i, example in iter_outputs(shard_iterable):
+   3502                         if update_data:
+   3503                             if i == 0:
+
+/usr/local/lib/python3.12/dist-packages/datasets/arrow_dataset.py in iter_outputs(shard_iterable)
+   3473             else:
+   3474                 for i, example in shard_iterable:
+-> 3475                     yield i, apply_function(example, i, offset=offset)
+   3476 
+   3477         num_examples_progress_update = 0
+
+/usr/local/lib/python3.12/dist-packages/datasets/arrow_dataset.py in apply_function(pa_inputs, indices, offset)
+   3396             """Utility to apply the function on a selection of columns."""
+   3397             inputs, fn_args, additional_args, fn_kwargs = prepare_inputs(pa_inputs, indices, offset=offset)
+-> 3398             processed_inputs = function(*fn_args, *additional_args, **fn_kwargs)
+   3399             return prepare_outputs(pa_inputs, inputs, processed_inputs)
+   3400 
+
+/tmp/ipykernel_1509/2526792613.py in format_pref(row)
+      1 def format_pref(row):
+      2     prompt_msgs = [{"role": "user", "content": row["prompt"]}]
+----> 3     prompt_text = tokenizer.apply_chat_template(
+      4         prompt_msgs, tokenize=False, add_generation_prompt=True
+      5     )
+
+NameError: name 'tokenizer' is not defined
+[   479.1s] ===== CELL 38/135  import textwrap
+---------------------------------------------------------------------------
+NameError                                 Traceback (most recent call last)
+/tmp/ipykernel_1509/1911047476.py in <cell line: 0>()
+      2 
+      3 for i in range(3):
+----> 4     row = pref[i]
+      5     n_prompt = len(tokenizer(row["prompt"]).input_ids)
+      6     n_chosen = len(tokenizer(row["chosen"]).input_ids)
+
+NameError: name 'pref' is not defined
+[   479.1s] ===== CELL 40/135  import numpy as np
+---------------------------------------------------------------------------
+NameError                                 Traceback (most recent call last)
+/tmp/ipykernel_1509/798663251.py in <cell line: 0>()
+      1 import numpy as np
+      2 
+----> 3 prompt_lens = np.array([len(tokenizer(p).input_ids) for p in pref["prompt"]])
+      4 chosen_lens = np.array([len(tokenizer(c).input_ids) for c in pref["chosen"]])
+      5 rejected_lens = np.array([len(tokenizer(r).input_ids) for r in pref["rejected"]])
+
+NameError: name 'pref' is not defined
+[   479.2s] ===== CELL 42/135  pref.to_parquet(str(PREF_OUT / "train.parquet"))
+---------------------------------------------------------------------------
+NameError                                 Traceback (most recent call last)
+/tmp/ipykernel_1509/2965650316.py in <cell line: 0>()
+----> 1 pref.to_parquet(str(PREF_OUT / "train.parquet"))
+      2 print(f"Saved {len(pref)} pairs to {PREF_OUT / 'train.parquet'}")
+      3 
+      4 # Also save a small eval slice (last 50 pairs) for NB4 use.
+      5 eval_slice = pref.select(range(len(pref) - 50, len(pref)))
+
+NameError: name 'pref' is not defined
+[   479.2s] ===== CELL 47/135  import os
+---------------------------------------------------------------------------
+AssertionError                            Traceback (most recent call last)
+/tmp/ipykernel_1509/2436076573.py in <cell line: 0>()
+     30 
+     31 assert SFT_PATH.exists(), f"NB1 must run first — {SFT_PATH} missing"
+---> 32 assert PREF_PATH.exists(), f"NB2 must run first — {PREF_PATH} missing"
+     33 
+     34 print(f"COMPUTE_TIER:    {COMPUTE_TIER}")
+
+AssertionError: NB2 must run first — /kaggle/working/lab22/data/pref/train.parquet missing
+[   479.2s] ===== CELL 48/135  import torch
+[   479.2s] ===== CELL 50/135  from unsloth import FastLanguageModel
+==((====))==  Unsloth 2026.4.8: Fast Qwen2 patching. Transformers: 4.57.6.
+   \\   /|    Tesla P100-PCIE-16GB. Num GPUs = 1. Max memory: 15.888 GB. Platform: Linux.
+O^O/ \_/ \    Torch: 2.10.0+cu128. CUDA: 6.0. CUDA Toolkit: 12.8. Triton: 3.6.0
+\        /    Bfloat16 = FALSE. FA [Xformers = 0.0.35. FA2 = False]
+ "-____-"     Free license: http://github.com/unslothai/unsloth
+Unsloth: Fast downloading is enabled - ignore downloading bars which are red colored!
+[0mconfig.hidden_size, config.vocab_size, bias=False)
+
+/usr/local/lib/python3.12/dist-packages/transformers/models/qwen2/modeling_qwen2.py in __init__(self, config)
+    319         )
+    320         self.norm = Qwen2RMSNorm(config.hidden_size, eps=config.rms_norm_eps)
+--> 321         self.rotary_emb = Qwen2RotaryEmbedding(config=config)
+    322         self.gradient_checkpointing = False
+    323         self.has_sliding_layers = "sliding_attention" in self.config.layer_types
+
+/usr/local/lib/python3.12/dist-packages/unsloth/models/llama.py in __init__(self, dim, max_position_embeddings, base, device, config)
+   1751         # Build here to make `torch.jit.trace` work.
+   1752         for device_idx in range(DEVICE_COUNT):
+-> 1753             self._set_cos_sin_cache(
+   1754                 seq_len = self.current_rope_size,
+   1755                 device = torch.device(device_idx),
+
+/usr/local/lib/python3.12/dist-packages/unsloth/models/llama.py in _set_cos_sin_cache(self, seq_len, device, dtype)
+   1785         # Different from paper, but it uses a different permutation in order to obtain the same calculation
+   1786         emb = torch.cat((freqs, freqs), dim = -1)
+-> 1787         cos = emb.cos().to(dtype = dtype, device = device, non_blocking = True)
+   1788         sin = emb.sin().to(dtype = dtype, device = device, non_blocking = True)
+   1789         self.multi_gpu_cos_cached[device.index] = cos
+
+AcceleratorError: CUDA error: no kernel image is available for execution on the device
+Search for `cudaErrorNoKernelImageForDevice' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+
+[   485.7s] ===== CELL 51/135  # Wrap policy with NEW LoRA adapter for DPO updates (don't merge SFT — keep stacked)
+---------------------------------------------------------------------------
+NameError                                 Traceback (most recent call last)
+/tmp/ipykernel_1509/4160971878.py in <cell line: 0>()
+      2 # Unsloth re-applies LoRA on top of the existing PeftModel.
+      3 model = FastLanguageModel.get_peft_model(
+----> 4     model,
+      5     r=16,
+      6     lora_alpha=32,
+
+NameError: name 'model' is not defined
+[   485.8s] ===== CELL 54/135  from trl import DPOConfig
+DPOConfig: beta=0.1  lr=5e-07  loss_type=sigmoid
+[   485.8s] ===== CELL 56/135  from datasets import Dataset
+;34m(self, path_or_paths, split, features, cache_dir, keep_in_memory, streaming, num_proc, **kwargs)
+     39         path_or_paths = path_or_paths if isinstance(path_or_paths, dict) else {self.split: path_or_paths}
+     40         hash = _PACKAGED_DATASETS_MODULES["parquet"][1]
+---> 41         self.builder = Parquet(
+     42             cache_dir=cache_dir,
+     43             data_files=path_or_paths,
+
+/usr/local/lib/python3.12/dist-packages/datasets/builder.py in __init__(self, cache_dir, dataset_name, config_name, hash, base_path, info, features, token, repo_id, data_files, data_dir, storage_options, writer_batch_size, **config_kwargs)
+    327 
+    328         if data_files is not None and not isinstance(data_files, DataFilesDict):
+--> 329             data_files = DataFilesDict.from_patterns(
+    330                 sanitize_patterns(data_files),
+    331                 base_path=base_path,
+
+/usr/local/lib/python3.12/dist-packages/datasets/data_files.py in from_patterns(cls, patterns, base_path, allowed_extensions, download_config)
+    687                 patterns_for_key
+    688                 if isinstance(patterns_for_key, DataFilesList)
+--> 689                 else DataFilesList.from_patterns(
+    690                     patterns_for_key,
+    691                     base_path=base_path,
+
+/usr/local/lib/python3.12/dist-packages/datasets/data_files.py in from_patterns(cls, patterns, base_path, allowed_extensions, download_config)
+    580             try:
+    581                 data_files.extend(
+--> 582                     resolve_pattern(
+    583                         pattern,
+    584                         base_path=base_path,
+
+/usr/local/lib/python3.12/dist-packages/datasets/data_files.py in resolve_pattern(pattern, base_path, allowed_extensions, download_config)
+    381         if allowed_extensions is not None:
+    382             error_msg += f" with any supported extension {list(allowed_extensions)}"
+--> 383         raise FileNotFoundError(error_msg)
+    384     return out
+    385 
+
+FileNotFoundError: Unable to find '/kaggle/working/lab22/data/pref/train.parquet'
+[   485.9s] ===== CELL 58/135  from trl import DPOTrainer
+---------------------------------------------------------------------------
+NameError                                 Traceback (most recent call last)
+/tmp/ipykernel_1509/1010689531.py in <cell line: 0>()
+      2 
+      3 trainer = DPOTrainer(
+----> 4     model=model,
+      5     ref_model=None,                # auto-derived from PEFT base
+      6     args=dpo_config,
+
+NameError: name 'model' is not defined
+[   485.9s] ===== CELL 59/135  train_result = trainer.train()
+---------------------------------------------------------------------------
+NameError                                 Traceback (most recent call last)
+/tmp/ipykernel_1509/462654582.py in <cell line: 0>()
+----> 1 train_result = trainer.train()
+      2 print(f"\nFinal DPO loss: {train_result.training_loss:.4f}")
+
+NameError: name 'trainer' is not defined
+[   485.9s] ===== CELL 61/135  import matplotlib.pyplot as plt
+---------------------------------------------------------------------------
+NameError                                 Traceback (most recent call last)
+/tmp/ipykernel_1509/2406823361.py in <cell line: 0>()
+      2 import pandas as pd
+      3 
+----> 4 logs = pd.DataFrame(trainer.state.log_history)
+      5 logs = logs[logs["loss"].notna() if "loss" in logs.columns else logs.index].copy()
+      6 
+
+NameError: name 'trainer' is not defined
+[   485.9s] ===== CELL 63/135  if chosen_col and rejected_col and len(logs) >= 5:
+---------------------------------------------------------------------------
+NameError                                 Traceback (most recent call last)
+/tmp/ipykernel_1509/4021903409.py in <cell line: 0>()
+----> 1 if chosen_col and rejected_col and len(logs) >= 5:
+      2     last_chosen = logs[chosen_col].iloc[-5:].mean()
+      3     last_rejected = logs[rejected_col].iloc[-5:].mean()
+      4     last_gap = last_chosen - last_rejected
+      5     first_chosen = logs[chosen_col].iloc[:5].mean()
+
+NameError: name 'chosen_col' is not defined
+[   486.0s] ===== CELL 65/135  trainer.model.save_pretrained(str(DPO_OUT))
+---------------------------------------------------------------------------
+NameError                                 Traceback (most recent call last)
+/tmp/ipykernel_1509/4209251616.py in <cell line: 0>()
+----> 1 trainer.model.save_pretrained(str(DPO_OUT))
+      2 tokenizer.save_pretrained(str(DPO_OUT))
+      3 print(f"Saved DPO adapter to {DPO_OUT}")
+      4 
+      5 # Save the headline metrics for verify.py + REFLECTION
+
+NameError: name 'trainer' is not defined
+[   486.0s] ===== CELL 70/135  import os
+Saved 8 eval prompts to /kaggle/working/lab22/data/eval/prompts.json
+[   486.0s] ===== CELL 71/135  import torch
+[   486.0s] ===== CELL 73/135  from unsloth import FastLanguageModel
+[   486.1s] ===== CELL 75/135  print("Generating with SFT-only adapter...")
+Generating with SFT-only adapter...
+==((====))==  Unsloth 2026.4.8: Fast Qwen2 patching. Transformers: 4.57.6.
+   \\   /|    Tesla P100-PCIE-16GB. Num GPUs = 1. Max memory: 15.888 GB. Platform: Linux.
+O^O/ \_/ \    Torch: 2.10.0+cu128. CUDA: 6.0. CUDA Toolkit: 12.8. Triton: 3.6.0
+\        /    Bfloat16 = FALSE. FA [Xformers = 0.0.35. FA2 = False]
+ "-____-"     Free license: http://github.com/unslothai/unsloth
+Unsloth: Fast downloading is enabled - ignore downloading bars which are red colored!
+[0mconfig.hidden_size, config.vocab_size, bias=False)
+
+/usr/local/lib/python3.12/dist-packages/transformers/models/qwen2/modeling_qwen2.py in __init__(self, config)
+    319         )
+    320         self.norm = Qwen2RMSNorm(config.hidden_size, eps=config.rms_norm_eps)
+--> 321         self.rotary_emb = Qwen2RotaryEmbedding(config=config)
+    322         self.gradient_checkpointing = False
+    323         self.has_sliding_layers = "sliding_attention" in self.config.layer_types
+
+/usr/local/lib/python3.12/dist-packages/unsloth/models/llama.py in __init__(self, dim, max_position_embeddings, base, device, config)
+   1751         # Build here to make `torch.jit.trace` work.
+   1752         for device_idx in range(DEVICE_COUNT):
+-> 1753             self._set_cos_sin_cache(
+   1754                 seq_len = self.current_rope_size,
+   1755                 device = torch.device(device_idx),
+
+/usr/local/lib/python3.12/dist-packages/unsloth/models/llama.py in _set_cos_sin_cache(self, seq_len, device, dtype)
+   1785         # Different from paper, but it uses a different permutation in order to obtain the same calculation
+   1786         emb = torch.cat((freqs, freqs), dim = -1)
+-> 1787         cos = emb.cos().to(dtype = dtype, device = device, non_blocking = True)
+   1788         sin = emb.sin().to(dtype = dtype, device = device, non_blocking = True)
+   1789         self.multi_gpu_cos_cached[device.index] = cos
+
+AcceleratorError: CUDA error: no kernel image is available for execution on the device
+Search for `cudaErrorNoKernelImageForDevice' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+
+[   489.5s] ===== CELL 77/135  print("Generating with SFT+DPO adapter...")
+Generating with SFT+DPO adapter...
+==((====))==  Unsloth 2026.4.8: Fast Qwen2 patching. Transformers: 4.57.6.
+   \\   /|    Tesla P100-PCIE-16GB. Num GPUs = 1. Max memory: 15.888 GB. Platform: Linux.
+O^O/ \_/ \    Torch: 2.10.0+cu128. CUDA: 6.0. CUDA Toolkit: 12.8. Triton: 3.6.0
+\        /    Bfloat16 = FALSE. FA [Xformers = 0.0.35. FA2 = False]
+ "-____-"     Free license: http://github.com/unslothai/unsloth
+Unsloth: Fast downloading is enabled - ignore downloading bars which are red colored!
+[0mconfig.hidden_size, config.vocab_size, bias=False)
+
+/usr/local/lib/python3.12/dist-packages/transformers/models/qwen2/modeling_qwen2.py in __init__(self, config)
+    319         )
+    320         self.norm = Qwen2RMSNorm(config.hidden_size, eps=config.rms_norm_eps)
+--> 321         self.rotary_emb = Qwen2RotaryEmbedding(config=config)
+    322         self.gradient_checkpointing = False
+    323         self.has_sliding_layers = "sliding_attention" in self.config.layer_types
+
+/usr/local/lib/python3.12/dist-packages/unsloth/models/llama.py in __init__(self, dim, max_position_embeddings, base, device, config)
+   1751         # Build here to make `torch.jit.trace` work.
+   1752         for device_idx in range(DEVICE_COUNT):
+-> 1753             self._set_cos_sin_cache(
+   1754                 seq_len = self.current_rope_size,
+   1755                 device = torch.device(device_idx),
+
+/usr/local/lib/python3.12/dist-packages/unsloth/models/llama.py in _set_cos_sin_cache(self, seq_len, device, dtype)
+   1785         # Different from paper, but it uses a different permutation in order to obtain the same calculation
+   1786         emb = torch.cat((freqs, freqs), dim = -1)
+-> 1787         cos = emb.cos().to(dtype = dtype, device = device, non_blocking = True)
+   1788         sin = emb.sin().to(dtype = dtype, device = device, non_blocking = True)
+   1789         self.multi_gpu_cos_cached[device.index] = cos
+
+AcceleratorError: CUDA error: no kernel image is available for execution on the device
+Search for `cudaErrorNoKernelImageForDevice' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+
+[   492.9s] ===== CELL 79/135  import pandas as pd
+---------------------------------------------------------------------------
+NameError                                 Traceback (most recent call last)
+/tmp/ipykernel_1509/504505162.py in <cell line: 0>()
+      3 
+      4 rows = []
+----> 5 for p, sft_out, dpo_out in zip(EVAL_PROMPTS, sft_outputs, dpo_outputs):
+      6     rows.append({
+      7         "id": p["id"],
+
+NameError: name 'sft_outputs' is not defined
+[   492.9s] ===== CELL 81/135  import matplotlib.pyplot as plt
+<Figure size 1400x150 with 1 Axes>
+[   493.1s] ===== CELL 83/135  JUDGE_PROMPT_TEMPLATE = """Bạn là 1 alignment researcher đang chấm output Vietnamese chat cho helpfulness và s
+[   493.1s] ===== CELL 84/135  judge_results = None
+No API keys set. Falling back to manual rubric mode.
+Fill in your manual judgments below — same JSON shape:
+  {"id": 1, "winner": "A" | "B" | "tie", "justification": "<...>"}
+894
+[   493.1s] ===== CELL 86/135  from collections import Counter
+
+============================================================
+WIN/LOSS/TIE SUMMARY (8 prompts)
+============================================================
+Overall:        SFT-only: 0/8   SFT+DPO: 0/8   tie: 8/8
+Helpfulness:    SFT-only: 0/4   SFT+DPO: 0/4   tie: 4/4
+Safety:         SFT-only: 0/4   SFT+DPO: 0/4   tie: 4/4
+[   493.2s] ===== CELL 91/135  import os
+COMPUTE_TIER:    T4
+DPO adapter:     /kaggle/working/lab22/adapters/dpo
+merged output:   /kaggle/temp/big/adapters/merged-fp16
+GGUF output:     /kaggle/temp/big/gguf
+[   493.2s] ===== CELL 92/135  import torch
+[   493.2s] ===== CELL 94/135  from unsloth import FastLanguageModel
+==((====))==  Unsloth 2026.4.8: Fast Qwen2 patching. Transformers: 4.57.6.
+   \\   /|    Tesla P100-PCIE-16GB. Num GPUs = 1. Max memory: 15.888 GB. Platform: Linux.
+O^O/ \_/ \    Torch: 2.10.0+cu128. CUDA: 6.0. CUDA Toolkit: 12.8. Triton: 3.6.0
+\        /    Bfloat16 = FALSE. FA [Xformers = 0.0.35. FA2 = False]
+ "-____-"     Free license: http://github.com/unslothai/unsloth
+Unsloth: Fast downloading is enabled - ignore downloading bars which are red colored!
+[0mconfig.hidden_size, config.vocab_size, bias=False)
+
+/usr/local/lib/python3.12/dist-packages/transformers/models/qwen2/modeling_qwen2.py in __init__(self, config)
+    319         )
+    320         self.norm = Qwen2RMSNorm(config.hidden_size, eps=config.rms_norm_eps)
+--> 321         self.rotary_emb = Qwen2RotaryEmbedding(config=config)
+    322         self.gradient_checkpointing = False
+    323         self.has_sliding_layers = "sliding_attention" in self.config.layer_types
+
+/usr/local/lib/python3.12/dist-packages/unsloth/models/llama.py in __init__(self, dim, max_position_embeddings, base, device, config)
+   1751         # Build here to make `torch.jit.trace` work.
+   1752         for device_idx in range(DEVICE_COUNT):
+-> 1753             self._set_cos_sin_cache(
+   1754                 seq_len = self.current_rope_size,
+   1755                 device = torch.device(device_idx),
+
+/usr/local/lib/python3.12/dist-packages/unsloth/models/llama.py in _set_cos_sin_cache(self, seq_len, device, dtype)
+   1785         # Different from paper, but it uses a different permutation in order to obtain the same calculation
+   1786         emb = torch.cat((freqs, freqs), dim = -1)
+-> 1787         cos = emb.cos().to(dtype = dtype, device = device, non_blocking = True)
+   1788         sin = emb.sin().to(dtype = dtype, device = device, non_blocking = True)
+   1789         self.multi_gpu_cos_cached[device.index] = cos
+
+AcceleratorError: CUDA error: no kernel image is available for execution on the device
+Search for `cudaErrorNoKernelImageForDevice' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+
+[   496.4s] ===== CELL 97/135  # This re-loads the model with both SFT and DPO adapters merged into base weights.
+---------------------------------------------------------------------------
+NameError                                 Traceback (most recent call last)
+/tmp/ipykernel_1509/1311516212.py in <cell line: 0>()
+      1 # This re-loads the model with both SFT and DPO adapters merged into base weights.
+      2 # Output is FP16 (or BF16 on Ampere+) HF-format weights ready for inference.
+----> 3 model.save_pretrained_merged(
+      4     str(MERGED_PATH),
+      5     tokenizer,
+
+NameError: name 'model' is not defined
+[   496.4s] ===== CELL 99/135  # Reload the merged model — Unsloth's GGUF saver expects a live model handle.
+---------------------------------------------------------------------------
+RuntimeError                              Traceback (most recent call last)
+/tmp/ipykernel_1509/4109498598.py in <cell line: 0>()
+      2 from unsloth import FastLanguageModel as FLM
+      3 
+----> 4 model, tokenizer = FLM.from_pretrained(
+      5     model_name=str(MERGED_PATH),
+      6     max_seq_length=MAX_LEN,
+
+/usr/local/lib/python3.12/dist-packages/unsloth/models/loader.py in from_pretrained(model_name, max_seq_length, dtype, load_in_4bit, load_in_8bit, load_in_16bit, full_finetuning, token, device_map, rope_scaling, fix_tokenizer, trust_remote_code, use_gradient_checkpointing, resize_model_vocab, revision, use_exact_model_name, offload_embedding, float32_mixed_precision, fast_inference, gpu_memory_utilization, float8_kv_cache, random_state, max_lora_rank, disable_log_stats, qat_scheme, load_in_fp8, unsloth_tiled_mlp, *args, **kwargs)
+    499                 "Please separate the LoRA and base models to 2 repos."
+    500             )
+--> 501         model_types = get_transformers_model_type(
+    502             peft_config if peft_config is not None else model_config,
+    503             trust_remote_code = trust_remote_code,
+
+/usr/local/lib/python3.12/dist-packages/unsloth_zoo/hf_utils.py in get_transformers_model_type(config, trust_remote_code)
+    108     """ Gets model_type from config file - can be PEFT or normal HF """
+    109     if config is None:
+--> 110         raise RuntimeError(
+    111             f"Unsloth: No config file found - are you sure the `model_name` is correct?\n"\
+    112             f"If you're using a model on your local device, confirm if the folder location exists.\n"\
+
+RuntimeError: Unsloth: No config file found - are you sure the `model_name` is correct?
+If you're using a model on your local device, confirm if the folder location exists.
+If you're using a HuggingFace online model, check if it exists.
+[   496.4s] ===== CELL 100/135  # Save GGUF in 1 quantization tier (Q4_K_M). Add more tiers below if you want the
+---------------------------------------------------------------------------
+NameError                                 Traceback (most recent call last)
+/tmp/ipykernel_1509/3561360382.py in <cell line: 0>()
+      1 # Save GGUF in 1 quantization tier (Q4_K_M). Add more tiers below if you want the
+      2 # +3 "GGUF release published" rigor add-on.
+----> 3 model.save_pretrained_gguf(
+      4     str(GGUF_DIR),
+      5     tokenizer,
+
+NameError: name 'model' is not defined
+[   496.5s] ===== CELL 102/135  # Uncomment if you want Q5_K_M + Q8_0 too (~2× total disk space).
+[   496.5s] ===== CELL 103/135  import os
+GGUF files:
+---------------------------------------------------------------------------
+NameError                                 Traceback (most recent call last)
+/tmp/ipykernel_1509/4225081973.py in <cell line: 0>()
+      7         print(f"  {p.name:50s}  {size_mb:>8.1f} MB")
+      8 
+----> 9 del model
+     10 gc.collect()
+     11 torch.cuda.empty_cache()
+
+NameError: name 'model' is not defined
+[   496.5s] ===== CELL 105/135  from llama_cpp import Llama
+---------------------------------------------------------------------------
+AssertionError                            Traceback (most recent call last)
+/tmp/ipykernel_1509/2026489916.py in <cell line: 0>()
+      3 # Find the Q4_K_M GGUF
+      4 gguf_files = list(GGUF_DIR.glob("*Q4_K_M*.gguf")) + list(GGUF_DIR.glob("*q4_k_m*.gguf"))
+----> 5 assert gguf_files, "No Q4_K_M GGUF found — step 3 may have failed"
+      6 gguf_path = gguf_files[0]
+      7 print(f"Loading: {gguf_path.name}")
+
+AssertionError: No Q4_K_M GGUF found — step 3 may have failed
+[   496.6s] ===== CELL 107/135  SMOKE_PROMPT = "Giải thích ngắn gọn (3 câu) cách thuật toán Bubble sort hoạt động."
+---------------------------------------------------------------------------
+NameError                                 Traceback (most recent call last)
+/tmp/ipykernel_1509/3967588978.py in <cell line: 0>()
+      1 SMOKE_PROMPT = "Giải thích ngắn gọn (3 câu) cách thuật toán Bubble sort hoạt động."
+      2 
+----> 3 response = llm.create_chat_completion(
+      4     messages=[{"role": "user", "content": SMOKE_PROMPT}],
+      5     max_tokens=200,
+
+NameError: name 'llm' is not defined
+[   496.6s] ===== CELL 110/135  deploy_meta = {
+---------------------------------------------------------------------------
+NameError                                 Traceback (most recent call last)
+/tmp/ipykernel_1509/1023571453.py in <cell line: 0>()
+      3     "base_model": BASE_MODEL,
+      4     "merged_path": str(MERGED_PATH),
+----> 5     "gguf_path": str(gguf_path),
+      6     "gguf_size_mb": round(gguf_path.stat().st_size / 1e6, 1),
+      7     "quantization": "q4_k_m",
+
+NameError: name 'gguf_path' is not defined
+[   496.6s] ===== CELL 115/135  import os
+COMPUTE_TIER:    T4
+IFEval:          4 prompts
+GSM8K:           4 problems
+MMLU:            2 questions
+AlpacaEval-lite: 4 prompts
+output:          /kaggle/working/lab22/data/eval
+[   496.7s] ===== CELL 116/135  import torch
+[   496.7s] ===== CELL 118/135  import subprocess
+[   496.7s] ===== CELL 120/135  print(">>> SFT-only on IFEval")
+>>> SFT-only on IFEval
+
+============================================================
+Running lm-eval [sft]: ifeval
+============================================================
+WARN: lm-eval didn't write results JSON. STDOUT tail:
+
+>>> SFT+DPO on IFEval
+
+============================================================
+Running lm-eval [dpo]: ifeval
+============================================================
+WARN: lm-eval didn't write results JSON. STDOUT tail:
+
+[   545.4s] ===== CELL 122/135  print(">>> SFT-only on GSM8K")
+>>> SFT-only on GSM8K
+
+============================================================
+Running lm-eval [sft]: gsm8k
+============================================================
+WARN: lm-eval didn't write results JSON. STDOUT tail:
+
+>>> SFT+DPO on GSM8K
+
+============================================================
+Running lm-eval [dpo]: gsm8k
+============================================================
+WARN: lm-eval didn't write results JSON. STDOUT tail:
+
+[   591.7s] ===== CELL 124/135  print(">>> SFT-only on MMLU (sampled)")
+>>> SFT-only on MMLU (sampled)
+
+============================================================
+Running lm-eval [sft]: mmlu
+============================================================
+WARN: lm-eval didn't write results JSON. STDOUT tail:
+
+>>> SFT+DPO on MMLU (sampled)
+
+============================================================
+Running lm-eval [dpo]: mmlu
+============================================================
+WARN: lm-eval didn't write results JSON. STDOUT tail:
+
+[   638.3s] ===== CELL 126/135  from datasets import load_dataset
+/root/.cache/huggingface/hub/datasets--tatsu-lab--alpaca_eval/snapshots/2edc6fad8be6b14ea7230aabfd08188da6b8b814/alpaca_eval.json
+Generating eval split: 0 examples [00:00, ? examples/s]
+Loaded 4 AlpacaEval-lite prompts
+[   638.9s] ===== CELL 127/135  def generate_with_adapter(adapter_path, prompts, max_new_tokens=256):
+[   638.9s] ===== CELL 128/135  JUDGE_PROMPT = """You are evaluating two assistant responses for helpfulness.
+[   639.0s] ===== CELL 129/135  import random
+⚠ No API key set, skipping AlpacaEval-lite. Set OPENAI_API_KEY or ANTHROPIC_API_KEY.
+[   639.0s] ===== CELL 131/135  def extract_score(results, primary_metric):
+
+============================================================
+BENCHMARK RESULTS
+============================================================
+  IFEval              SFT: nan   DPO: nan   Δ: +nan —
+  GSM8K               SFT: nan   DPO: nan   Δ: +nan —
+  MMLU                SFT: nan   DPO: nan   Δ: +nan —
+  AlpacaEval-lite     SFT: nan   DPO: nan   Δ: +nan —
+[   639.0s] ===== CELL 132/135  import matplotlib.pyplot as plt
+<Figure size 1100x500 with 1 Axes>
+[   639.4s] ===== CELL 134/135  final = {
+
+Saved /kaggle/working/lab22/data/eval/benchmark_results.json
+[   642.2s] ======================================================================
+[   642.2s] CELL STATUS SUMMARY
+[   642.2s]   cell   13  error  
+[   642.3s]   cell   14  error  
+[   642.3s]   cell   16  error  
+[   642.3s]   cell   17  error  
+[   642.3s]   cell   19  error  
+[   642.3s]   cell   20  error  
+[   642.3s]   cell   22  error  
+[   642.3s]   cell   24  error  
+[   642.3s]   cell   25  error  
+[   642.3s]   cell   32  error  
+[   642.3s]   cell   36  error  
+[   642.3s]   cell   38  error  
+[   642.3s]   cell   40  error  
+[   642.3s]   cell   42  error  
+[   642.3s]   cell   47  error  
+[   642.3s]   cell   50  error  
+[   642.3s]   cell   51  error  
+[   642.3s]   cell   56  error  
+[   642.3s]   cell   58  error  
+[   642.3s]   cell   59  error  
+[   642.3s]   cell   61  error  
+[   642.3s]   cell   63  error  
+[   642.3s]   cell   65  error  
+[   642.3s]   cell   75  error  
+[   642.3s]   cell   77  error  
+[   642.3s]   cell   79  error  
+[   642.3s]   cell   94  error  
+[   642.3s]   cell   97  error  
+[   642.3s]   cell   99  error  
+[   642.3s]   cell  100  error  
+/kaggle/working/lab22
+/kaggle/working/lab22/adapters
+/kaggle/working/lab22/adapters/dpo
+/kaggle/working/lab22/adapters/merged-fp16
+/kaggle/working/lab22/adapters/sft-mini
+/kaggle/working/lab22/notebooks
+/kaggle/working/lab22/notebooks/unsloth_compiled_cache
+/kaggle/working/lab22/notebooks/unsloth_compiled_cache/UnslothDDPOTrainer.py
+/kaggle/working/lab22/notebooks/unsloth_compiled_cache/UnslothXPOTrainer.py
+/kaggle/working/lab22/notebooks/unsloth_compiled_cache/UnslothRLOOTrainer.py
+/kaggle/working/lab22/notebooks/unsloth_compiled_cache/UnslothGKDTrainer.py
+/kaggle/working/lab22/notebooks/unsloth_compiled_cache/UnslothKTOTrainer.py
+/kaggle/working/lab22/notebooks/unsloth_compiled_cache/UnslothGRPOTrainer.py
+/kaggle/working/lab22/notebooks/unsloth_compiled_cache/UnslothCPOTrainer.py
+/kaggle/working/lab22/notebooks/unsloth_compiled_cache/UnslothPRMTrainer.py
+/kaggle/working/lab22/notebooks/unsloth_compiled_cache/UnslothAlignPropTrainer.py
+/kaggle/working/lab22/notebooks/unsloth_compiled_cache/UnslothOnlineDPOTrainer.py
+/kaggle/working/lab22/notebooks/unsloth_compiled_cache/UnslothPPOTrainer.py
+/kaggle/working/lab22/notebooks/unsloth_compiled_cache/moe_utils.py
+/kaggle/working/lab22/notebooks/unsloth_compiled_cache/.locks
+/kaggle/working/lab22/notebooks/unsloth_compiled_cache/UnslothNashMDTrainer.py
+/kaggle/working/lab22/notebooks/unsloth_compiled_cache/__pycache__
+/kaggle/working/lab22/notebooks/unsloth_compiled_cache/UnslothIterativeSFTTrainer.py
+/kaggle/working/lab22/notebooks/unsloth_compiled_cache/UnslothDPOTrainer.py
+/kaggle/working/lab22/notebooks/unsloth_compiled_cache/UnslothORPOTrainer.py
+/kaggle/working/lab22/notebooks/unsloth_compiled_cache/UnslothBCOTrainer.py
+/kaggle/working/lab22/notebooks/unsloth_compiled_cache/UnslothSFTTrainer.py
+/kaggle/working/lab22/notebooks/unsloth_compiled_cache/UnslothRewardTrainer.py
+/kaggle/working/lab22/submission
+/kaggle/working/lab22/submission/screenshots
+/kaggle/working/lab22/submission/screenshots/07-benchmark-comparison.png
+/kaggle/working/lab22/submission/screenshots/04-side-by-side-table.png
+/kaggle/working/lab22/data
+/kaggle/working/lab22/data/eval
+/kaggle/working/lab22/data/eval/judge_results.json
+/kaggle/working/lab22/data/eval/prompts.json
+/kaggle/working/lab22/data/eval/benchmark_results.json
+/kaggle/working/lab22/data/pref
+/kaggle/working/lab22/gguf
+[   642.3s]   cell  103  error  
+[   642.3s]   cell  105  error  
+[   642.3s]   cell  107  error  
+[   642.3s]   cell  110  error  
+[   642.3s] ok=33  problems=34
+7.1M	/kaggle/working
+/kaggle/working/lab22
+/kaggle/working/lab22/adapters
+/kaggle/working/lab22/adapters/dpo
+/kaggle/working/lab22/adapters/merged-fp16
+/kaggle/working/lab22/adapters/sft-mini
+/kaggle/working/lab22/notebooks
+/kaggle/working/lab22/notebooks/unsloth_compiled_cache
+/kaggle/working/lab22/notebooks/unsloth_compiled_cache/UnslothDDPOTrainer.py
+/kaggle/working/lab22/notebooks/unsloth_compiled_cache/UnslothXPOTrainer.py
+/kaggle/working/lab22/notebooks/unsloth_compiled_cache/UnslothRLOOTrainer.py
+/kaggle/working/lab22/notebooks/unsloth_compiled_cache/UnslothGKDTrainer.py
+/kaggle/working/lab22/notebooks/unsloth_compiled_cache/UnslothKTOTrainer.py
+/kaggle/working/lab22/notebooks/unsloth_compiled_cache/UnslothGRPOTrainer.py
+/kaggle/working/lab22/notebooks/unsloth_compiled_cache/UnslothCPOTrainer.py
+/kaggle/working/lab22/notebooks/unsloth_compiled_cache/UnslothPRMTrainer.py
+/kaggle/working/lab22/notebooks/unsloth_compiled_cache/UnslothAlignPropTrainer.py
+/kaggle/working/lab22/notebooks/unsloth_compiled_cache/UnslothOnlineDPOTrainer.py
+/kaggle/working/lab22/notebooks/unsloth_compiled_cache/UnslothPPOTrainer.py
+/kaggle/working/lab22/notebooks/unsloth_compiled_cache/moe_utils.py
+/kaggle/working/lab22/notebooks/unsloth_compiled_cache/.locks
+/kaggle/working/lab22/notebooks/unsloth_compiled_cache/UnslothNashMDTrainer.py
+/kaggle/working/lab22/notebooks/unsloth_compiled_cache/__pycache__
+/kaggle/working/lab22/notebooks/unsloth_compiled_cache/UnslothIterativeSFTTrainer.py
+/kaggle/working/lab22/notebooks/unsloth_compiled_cache/UnslothDPOTrainer.py
+/kaggle/working/lab22/notebooks/unsloth_compiled_cache/UnslothORPOTrainer.py
+/kaggle/working/lab22/notebooks/unsloth_compiled_cache/UnslothBCOTrainer.py
+/kaggle/working/lab22/notebooks/unsloth_compiled_cache/UnslothSFTTrainer.py
+/kaggle/working/lab22/notebooks/unsloth_compiled_cache/UnslothRewardTrainer.py
+/kaggle/working/lab22/submission
+/kaggle/working/lab22/submission/screenshots
+/kaggle/working/lab22/submission/screenshots/07-benchmark-comparison.png
+/kaggle/working/lab22/submission/screenshots/04-side-by-side-table.png
+/kaggle/working/lab22/data
+/kaggle/working/lab22/data/eval
+/kaggle/working/lab22/data/eval/judge_results.json
+/kaggle/working/lab22/data/eval/prompts.json
+/kaggle/working/lab22/data/eval/benchmark_results.json
+/kaggle/working/lab22/data/pref
+/kaggle/working/lab22/gguf
+7.1M	/kaggle/working
+[   642.3s] DONE
+/usr/local/lib/python3.12/dist-packages/mistune.py:435: SyntaxWarning: invalid escape sequence '\|'
+  cells[i][c] = re.sub('\\\\\|', '|', cell)
+/usr/local/lib/python3.12/dist-packages/nbconvert/filters/filter_links.py:36: SyntaxWarning: invalid escape sequence '\_'
+  text = re.sub(r'_', '\_', text) # Escape underscores in display text
+[NbConvertApp] Converting notebook __notebook__.ipynb to notebook
+[NbConvertApp] Writing 256418 bytes to __notebook__.ipynb
+[NbConvertApp] Converting notebook __notebook__.ipynb to html
+[NbConvertApp] Writing 552632 bytes to __results__.html
