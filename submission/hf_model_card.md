@@ -15,9 +15,7 @@ language: [vi, en]
 DPO-aligned LoRA adapter over `unsloth/Qwen2.5-3B-bnb-4bit`, trained for
 Lab 22 (DPO/ORPO Alignment), Track 3 · Day 22, VinUni AICB program.
 
-> **Do not publish until `dpo_metrics.json` shows a non-null `end_reward_gap`.**
-> Every `TODO` below must be replaced with a measured value. Do not fill them
-> from expectation — an unmeasured number in a model card is a fabricated result.
+Metrics below are measured, taken from `adapters/dpo/dpo_metrics.json`.
 
 ## Training pipeline
 
@@ -48,15 +46,17 @@ Lab 22 (DPO/ORPO Alignment), Track 3 · Day 22, VinUni AICB program.
 
 | Metric | Value |
 |---|---|
-| final DPO train loss | TODO |
-| end chosen reward | TODO |
-| end rejected reward | TODO |
-| **end reward gap** | TODO |
+| final DPO train loss | 0.7996 |
+| end chosen reward | -0.802 |
+| end rejected reward | -1.020 |
+| **end reward gap** | **+0.218** |
 
-Read the reward curves before quoting the gap: a widening gap can come from the
-chosen reward rising, from the rejected reward falling faster, or from
-likelihood displacement (chosen reward falling while rejected falls faster).
-Those are different outcomes, and only the curves distinguish them.
+The chosen reward rises over training (about -1.21 -> -0.8), so this is not the
+likelihood-displacement failure mode. But both rewards stay negative, the two
+curves track each other closely, and the gap oscillates between about -0.12 and
++0.46 with no clean trend — at step 240 it is negative. The `+0.218` is a mean
+over the last five logged points. Treat it as a weak positive signal from a
+teaching-scale run, not a settled result.
 
 ## Chat template
 

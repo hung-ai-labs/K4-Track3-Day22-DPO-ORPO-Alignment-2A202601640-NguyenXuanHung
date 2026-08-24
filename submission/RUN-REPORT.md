@@ -1,7 +1,7 @@
 # Run Report — Lab 22 DPO/ORPO Alignment
 
-**Status at submission time (2026-08-24, 23:30 local): NB1 and NB2 complete and
-verified. NB3 (DPO training) NOT complete. NB4/NB5/NB6 not produced.**
+**Status (2026-08-25, 00:10 local): NB1, NB2, NB3 and NB4 complete on Kaggle
+Tesla T4. NB5 (GGUF export) fails — see 3.4. NB6 (benchmarks) not run.**
 
 This report states exactly what was produced, what was not, and why. Nothing in
 `submission/screenshots/` or `adapters/` is presented as a result that was not
@@ -13,16 +13,63 @@ actually computed.
 
 | Artifact | Status | Evidence |
 |---|---|---|
-| `adapters/sft-mini/` | ✅ trained | LoRA r=16, alpha=32, 7 target modules; final SFT loss **1.4950** |
+| `adapters/sft-mini/` | ✅ trained | LoRA r=16, alpha=32, 7 target modules; 125 steps |
+| `adapters/dpo/` | ✅ **trained** | 250 steps, `end_reward_gap = +0.2182` (non-null) |
+| `submission/screenshots/03-dpo-reward-curves.png` | ✅ real | chosen and rejected plotted separately |
+| `submission/screenshots/04-side-by-side-table.png` | ✅ real | 8 prompts, 7/8 outputs differ between adapters |
+| `data/eval/side_by_side.jsonl` | ✅ real | full untruncated generations |
+| `submission/Lab22_DPO_T4_executed.ipynb` | ✅ | executed notebook with outputs |
 | `data/pref/train.parquet` | ✅ built | 2000 rows, columns `prompt/chosen/rejected`, ChatML applied, `chosen != rejected` |
 | `data/pref/eval.parquet` | ✅ built | 50 rows |
 | `submission/screenshots/02-sft-loss.png` | ✅ real | plotted from `trainer.state.log_history` of the completed SFT run |
 | `submission/logs/` | ✅ raw | unedited kernel logs backing every claim below |
 
-## 2. What is deliberately absent
+## 2. DPO results
 
-`adapters/dpo/`, `03-dpo-reward-curves.png`, `04-side-by-side-table.png` and
-`benchmark_results.json` are **not** included.
+Run: Kaggle Tesla T4, 70 minutes wall clock, 49/55 cells clean.
+
+```
+Num examples = 2,000 | Num Epochs = 1 | Total steps = 250
+Batch size per device = 1 | Gradient accumulation steps = 8
+Trainable parameters = 29,933,568 of 3,115,872,256 (0.96% trained)
+
+Final DPO loss:        0.7996
+END  chosen reward:    -0.802
+END  rejected reward:  -1.020
+END  reward gap:       +0.218
+```
+
+**Reading the curves, not just the headline number.** From
+`03-dpo-reward-curves.png`:
+
+- The chosen reward *rises* over training, from about **-1.21** at step 10 to
+  about **-0.8** at the end. The notebook's self-check prints
+  `✓ INTENDED: chosen reward UP and gap positive`, and the curve supports that —
+  this is not the likelihood-displacement failure mode of deck §3.4.
+- Both rewards stay **negative throughout**: the policy assigns lower log-prob
+  than the reference to chosen *and* rejected completions. The two curves track
+  each other closely and nearly overlap at step 250.
+- The gap is **noisy and small**. It oscillates between roughly **-0.12 and
+  +0.46** with no clean upward trend; at step 240 it is negative. The reported
+  `+0.218` is a mean over the last five logged points of that oscillating signal,
+  not a settled separation.
+
+Honest summary: with lr=5e-7 over 250 steps the preference signal is present and
+positive on average, but weak and unstable. Quoting `+0.218` as a clean success
+would overstate what the curves show.
+
+### NB4 — qualitative comparison
+
+8 prompts generated from both adapters; **7 of 8 outputs differ**. The automated
+judge did **not** run: no `OPENAI_API_KEY` or `ANTHROPIC_API_KEY` was set, so
+`data/eval/judge_results.json` contains the notebook's documented fallback —
+8 entries of `{"winner": "tie", "justification": "MANUAL — fill in"}`. Those are
+placeholders and **must be filled in by hand**; they are not measured results.
+
+## 3. An earlier run that produced fake-looking results
+
+Before the fixes below landed, a run crashed inside DPO but still executed its
+save cells, writing:
 
 Earlier runs *did* produce files with those names, and they looked valid. They
 were not. When DPO training crashed, the notebook still executed its save cells,
@@ -38,12 +85,12 @@ so it wrote:
 Shipping those files would have meant submitting fabricated results. They were
 discarded instead.
 
-## 3. Three real defects found in the lab, and their fixes
+## 4. Five real defects found in the lab, and their fixes
 
 These are bugs in the lab as shipped, not environment quirks. All three reproduce
 on Colab T4 as well as Kaggle T4.
 
-### 3.1 SFT dataset is unreachable
+### 4.1 SFT dataset is unreachable
 
 ```
 DatasetNotFoundError: Dataset '5CD-AI/Vietnamese-alpaca-cleaned'
@@ -59,7 +106,7 @@ Vietnamese translation of Alpaca-cleaned). Its columns are exactly
 the swap was made through the `SFT_DATASET` environment variable the notebook
 already reads.
 
-### 3.2 Base model ships no chat template
+### 4.2 Base model ships no chat template
 
 ```
 ValueError: Cannot use chat template functions because
@@ -80,7 +127,7 @@ Note a related trap: the guard is placed inside
 `pad_token = <|vision_pad|>`, so that branch never executes. Any fix placed
 inside it is dead code.
 
-### 3.3 Unsloth selects an attention backend the T4 cannot train with
+### 4.3 Unsloth selects an attention backend the T4 cannot train with
 
 ```
 NotImplementedError: No operator found for memory_efficient_attention_backward
@@ -130,7 +177,7 @@ SDPA_HAS_GQA  True
 BACKEND       sdpa
 ```
 
-## 4. Why DPO did not finish
+## 5. Timing
 
 With the backend fixed, DPO ran correctly — the configuration was confirmed
 against the spec:
@@ -141,21 +188,22 @@ Batch size per device = 1 | Gradient accumulation steps = 8
 Trainable parameters = 29,933,568 of 3,115,872,256 (0.96% trained)
 ```
 
-Measured throughput on T4 with SDPA: **14.65 s/it**, i.e. ~61 minutes for 250
-steps. SDPA is materially slower than the xformers path it replaced, and that
-cost is what pushed the run past the deadline.
+Measured throughput on T4 with SDPA: **14.65 s/it**, ~61 minutes for 250 steps.
+SDPA is materially slower than the xformers path it replaces; that is the price
+of the 4.3 fix on this hardware.
 
-The run reached step ~61–100/250 before the Colab runtime was reclaimed
-("disconnected due to inactivity or reaching its maximum duration"). Because the
-lab sets `save_strategy="no"`, there was no intermediate checkpoint to resume
-from.
+A parallel Colab attempt reached step ~61–100/250 before the runtime was
+reclaimed ("disconnected due to inactivity or reaching its maximum duration").
+Because the lab sets `save_strategy="no"` there was no checkpoint to resume from.
+The Kaggle run is the one that completed, at 70 minutes wall clock including
+dependency installation.
 
 Hyperparameters were held at spec throughout and never reduced to save time:
 `beta=0.1`, `lr=5e-7`, `max_length=512`, `max_prompt_length=256`,
 `per_device_train_batch_size=1`, `gradient_accumulation_steps=8`, LoRA r=16 /
 alpha=32, 2000 preference pairs.
 
-### 3.4 NB5 merges the wrong adapter, and its claim contradicts its code
+### 4.4 / 4.5 NB5 merges the wrong adapter, and crashes on reload
 
 `NB5` cell 94 is titled *"Stack SFT-mini -> DPO adapters"* and loads:
 
@@ -186,7 +234,7 @@ checkpoint on disk is fp16.
 (no reload), and **refuses to run** if `dpo_metrics.json` has
 `end_reward_gap: null`.
 
-## 5. Environment note
+## 6. Environment note
 
 Kaggle's default GPU allocation for this account is a **Tesla P100 (sm_60)**,
 which torch 2.10+cu128 no longer builds kernels for:
@@ -199,7 +247,7 @@ sm_70 sm_75 sm_80 sm_86 sm_90 sm_100 sm_120.
 
 T4 must be requested explicitly (`machine_shape: NvidiaTeslaT4`).
 
-## 6. To reproduce
+## 7. To reproduce
 
 `scripts/run_nb1_nb3.py` runs NB1 → NB2 → NB3 with all three fixes applied and
 asserts the attention backend is SDPA before training starts. Budget ~75 minutes

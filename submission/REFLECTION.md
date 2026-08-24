@@ -7,29 +7,32 @@
 
 ---
 
-> ## ⚠ Trạng thái nộp bài — đọc trước
+> ## Trạng thái nộp bài — đọc trước
 >
-> **NB1 và NB2 đã hoàn tất và verify được. NB3 (DPO training) CHƯA hoàn tất.**
-> NB4/NB5/NB6 chưa có kết quả.
+> **NB1, NB2, NB3, NB4 đã hoàn tất trên Kaggle Tesla T4.** NB5 (GGUF) lỗi,
+> NB6 (benchmark) chưa chạy. Chi tiết + log gốc: **[`RUN-REPORT.md`](RUN-REPORT.md)**.
 >
-> Chi tiết đầy đủ, kèm log gốc: **[`RUN-REPORT.md`](RUN-REPORT.md)**.
+> DPO chạy đúng spec: 2000 pairs → 250 steps, batch 1 × grad_accum 8, β=0.1,
+> lr=5e-7, LoRA r=16/α=32. **Không hyperparameter nào bị giảm.**
 >
-> Tóm tắt:
-> - Lab có **3 lỗi thật** khiến notebook không chạy được như đã ship: dataset SFT
->   trả HTTP 401 (repo private/đã xóa), Qwen2.5 base không có `chat_template`, và
->   Unsloth chọn backend xformers trên sm_75 mà kernel backward của nó không hỗ
->   trợ layout BMGHK của grouped-query attention. Cả 3 đã được chẩn đoán và fix —
->   xem RUN-REPORT §3.
-> - Sau khi fix, DPO chạy **đúng cấu hình** (2000 pairs → 250 steps, batch 1 ×
->   grad_accum 8, β=0.1, lr=5e-7, LoRA r=16/α=32), đo được **14.65 s/it** trên T4
->   với SDPA. Runtime bị thu hồi ở khoảng step 61–100/250; `save_strategy="no"`
->   nên không có checkpoint để resume.
-> - **Không có hyperparameter nào bị giảm để chạy cho kịp.**
-> - `adapters/dpo/`, `03-dpo-reward-curves.png`, `04-side-by-side-table.png`
->   **cố ý không nộp**. Các lần chạy trước có sinh ra file trùng tên trông hợp lệ,
->   nhưng adapter chưa nhận một gradient update nào và `dpo_metrics.json` báo
->   nhầm loss của SFT thành loss của DPO (`end_reward_gap: null` là dấu hiệu duy
->   nhất lộ ra). Nộp chúng sẽ là bịa kết quả.
+> | | |
+> |---|---|
+> | final DPO loss | 0.7996 |
+> | end chosen reward | −0.802 |
+> | end rejected reward | −1.020 |
+> | **end reward gap** | **+0.218** |
+>
+> Lab có **5 lỗi thật** khiến notebook không chạy được như ship — xem RUN-REPORT §4.
+> Nguy hiểm nhất là §4.4: NB5 chỉ merge SFT adapter nhưng markdown khẳng định đã
+> merge cả DPO, nên GGUF xuất ra là model SFT dán nhãn DPO.
+>
+> **Hai việc bạn phải tự làm trước khi nộp:**
+> 1. `data/eval/judge_results.json` đang là placeholder `"MANUAL — fill in"`
+>    (không có API key nên judge tự động không chạy — đây là fallback hợp lệ của
+>    notebook). Phải tự chấm 8 cặp trong `data/eval/side_by_side.jsonl`.
+> 2. Mục §3 bên dưới: đọc `03-dpo-reward-curves.png` rồi tự viết phân tích.
+>    Đừng chép "+0.218 là thành công" — reward gap dao động từ −0.12 đến +0.46,
+>    tại step 240 còn âm. Tín hiệu là dương nhưng yếu và nhiễu.
 
 ---
 
