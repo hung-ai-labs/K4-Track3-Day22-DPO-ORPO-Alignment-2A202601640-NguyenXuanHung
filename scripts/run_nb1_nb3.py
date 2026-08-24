@@ -27,13 +27,15 @@ log(f"backend=sdpa HAS_XFORMERS={HAS_XFORMERS} SDPA_HAS_GQA={SDPA_HAS_GQA}")
 BASE_MODEL = "unsloth/Qwen2.5-3B-bnb-4bit"
 MAX_LEN, MAX_PROMPT_LEN = 512, 256
 PER_DEVICE_BATCH, GRAD_ACCUM = 1, 8
-BETA, LR, EPOCHS = 0.1, 5e-7, 1
+BETA = float(os.environ.get("DPO_BETA", "0.1"))   # spec default; beta_sweep.py overrides
+LR, EPOCHS = 5e-7, 1
 SFT_SLICE, PREF_SLICE = 1000, 2000
 LORA = dict(r=16, lora_alpha=32, lora_dropout=0.0, bias="none",
             target_modules=["q_proj","k_proj","v_proj","o_proj","gate_proj","up_proj","down_proj"],
             use_gradient_checkpointing="unsloth", random_state=42, use_rslora=False, loftq_config=None)
 ROOT = Path(os.environ.get("LAB22_ROOT", "/content/lab22"))
-SFT_PATH, DPO_OUT = ROOT/"adapters"/"sft-mini", ROOT/"adapters"/"dpo"
+SFT_PATH = ROOT/"adapters"/"sft-mini"
+DPO_OUT = Path(os.environ.get("DPO_OUT_OVERRIDE", str(ROOT/"adapters"/"dpo")))
 PREF_DIR, SHOTS = ROOT/"data"/"pref", ROOT/"submission"/"screenshots"
 for p in (SFT_PATH, DPO_OUT, PREF_DIR, SHOTS): p.mkdir(parents=True, exist_ok=True)
 
@@ -53,52 +55,60 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from datasets import load_dataset, Dataset
 
-log("=== NB1 SFT ===")
-model, tok = FastLanguageModel.from_pretrained(model_name=BASE_MODEL, max_seq_length=MAX_LEN, dtype=None, load_in_4bit=True)
-ensure_ct(tok)
-if tok.pad_token is None: tok.pad_token = tok.eos_token
-model = FastLanguageModel.get_peft_model(model, **LORA)
-ds = load_dataset(os.environ.get("SFT_DATASET", "saillab/alpaca-vietnamese-cleaned"), split=f"train[:{SFT_SLICE}]")
-log(f"sft rows={len(ds)} cols={ds.column_names}")
-def fmt(row):
-    m = []
-    if row.get("instruction"):
-        p = row["instruction"]
-        if row.get("input"): p += "\n\n" + row["input"]
-        m.append({"role":"user","content":p})
-    if row.get("output"): m.append({"role":"assistant","content":row["output"]})
-    return {"text": tok.apply_chat_template(m, tokenize=False, add_generation_prompt=False)}
-dsf = ds.map(fmt, remove_columns=ds.column_names)
-from trl import SFTTrainer, SFTConfig
-sc = SFTConfig(output_dir=str(ROOT/"adapters"/"sft-ckpt"), per_device_train_batch_size=PER_DEVICE_BATCH,
-    gradient_accumulation_steps=GRAD_ACCUM, num_train_epochs=EPOCHS, learning_rate=2e-4, warmup_ratio=0.03,
-    lr_scheduler_type="cosine", logging_steps=10, save_strategy="no", optim="adamw_8bit",
-    bf16=torch.cuda.is_bf16_supported(), fp16=not torch.cuda.is_bf16_supported(), seed=42,
-    max_length=MAX_LEN, dataset_text_field="text", report_to="none")
-tr = SFTTrainer(model=model, processing_class=tok, args=sc, train_dataset=dsf)
-sres = tr.train()
-log(f"SFT final loss={sres.training_loss:.4f}")
-ls = [x["loss"] for x in tr.state.log_history if "loss" in x]
-st = [x["step"] for x in tr.state.log_history if "loss" in x]
-f, a = plt.subplots(figsize=(8,4)); a.plot(st, ls, marker="o", markersize=3, linewidth=1.2)
-a.set_xlabel("Training step"); a.set_ylabel("Loss"); a.grid(True, alpha=0.3)
-a.set_title(f"SFT-mini loss - T4 - Qwen2.5-3B - {SFT_SLICE} samples")
-f.tight_layout(); f.savefig(SHOTS/"02-sft-loss.png", dpi=120); plt.close(f)
-tr.model.save_pretrained(str(SFT_PATH)); tok.save_pretrained(str(SFT_PATH))
-log(f"saved SFT -> {SFT_PATH}")
-del tr, model; gc.collect(); torch.cuda.empty_cache()
+SKIP_SFT = os.environ.get("SKIP_SFT") == "1" and (SFT_PATH/"adapter_model.safetensors").exists() \
+    and (PREF_DIR/"train.parquet").exists()
 
-log("=== NB2 preference data ===")
-pds = load_dataset("argilla/ultrafeedback-binarized-preferences-cleaned", split=f"train[:{PREF_SLICE}]")
-def pfmt(row):
-    pt = tok.apply_chat_template([{"role":"user","content":row["prompt"]}], tokenize=False, add_generation_prompt=True)
-    ch = row["chosen"][-1]["content"] if isinstance(row["chosen"], list) else row["chosen"]
-    rj = row["rejected"][-1]["content"] if isinstance(row["rejected"], list) else row["rejected"]
-    return {"prompt": pt, "chosen": ch, "rejected": rj}
-pref = pds.map(pfmt, remove_columns=pds.column_names)
-pref.to_parquet(str(PREF_DIR/"train.parquet"))
-pref.select(range(len(pref)-50, len(pref))).to_parquet(str(PREF_DIR/"eval.parquet"))
-log(f"saved {len(pref)} pairs -> {PREF_DIR/'train.parquet'}")
+if SKIP_SFT:
+    from transformers import AutoTokenizer
+    log("SKIP_SFT=1 and artifacts present -> reusing existing SFT adapter + parquet")
+    tok = ensure_ct(AutoTokenizer.from_pretrained(str(SFT_PATH)))
+else:
+  log("=== NB1 SFT ===")
+  model, tok = FastLanguageModel.from_pretrained(  model_name=BASE_MODEL, max_seq_length=MAX_LEN, dtype=None, load_in_4bit=True)
+  ensure_ct(tok)
+  if tok.pad_token is None: tok.pad_token = tok.eos_token
+  model = FastLanguageModel.get_peft_model(model, **LORA)
+  ds = load_dataset(os.environ.get("SFT_DATASET", "saillab/alpaca-vietnamese-cleaned"), split=f"train[:{SFT_SLICE}]")
+  log(f"sft rows={len(ds)} cols={ds.column_names}")
+  def fmt(row):
+      m = []
+      if row.get("instruction"):
+          p = row["instruction"]
+          if row.get("input"): p += "\n\n" + row["input"]
+          m.append({"role":"user","content":p})
+      if row.get("output"): m.append({"role":"assistant","content":row["output"]})
+      return {"text": tok.apply_chat_template(m, tokenize=False, add_generation_prompt=False)}
+  dsf = ds.map(fmt, remove_columns=ds.column_names)
+  from trl import SFTTrainer, SFTConfig
+  sc = SFTConfig(output_dir=str(ROOT/"adapters"/"sft-ckpt"), per_device_train_batch_size=PER_DEVICE_BATCH,
+      gradient_accumulation_steps=GRAD_ACCUM, num_train_epochs=EPOCHS, learning_rate=2e-4, warmup_ratio=0.03,
+      lr_scheduler_type="cosine", logging_steps=10, save_strategy="no", optim="adamw_8bit",
+      bf16=torch.cuda.is_bf16_supported(), fp16=not torch.cuda.is_bf16_supported(), seed=42,
+      max_length=MAX_LEN, dataset_text_field="text", report_to="none")
+  tr = SFTTrainer(model=model, processing_class=tok, args=sc, train_dataset=dsf)
+  sres = tr.train()
+  log(f"SFT final loss={sres.training_loss:.4f}")
+  ls = [x["loss"] for x in tr.state.log_history if "loss" in x]
+  st = [x["step"] for x in tr.state.log_history if "loss" in x]
+  f, a = plt.subplots(figsize=(8,4)); a.plot(st, ls, marker="o", markersize=3, linewidth=1.2)
+  a.set_xlabel("Training step"); a.set_ylabel("Loss"); a.grid(True, alpha=0.3)
+  a.set_title(f"SFT-mini loss - T4 - Qwen2.5-3B - {SFT_SLICE} samples")
+  f.tight_layout(); f.savefig(SHOTS/"02-sft-loss.png", dpi=120); plt.close(f)
+  tr.model.save_pretrained(str(SFT_PATH)); tok.save_pretrained(str(SFT_PATH))
+  log(f"saved SFT -> {SFT_PATH}")
+  del tr, model; gc.collect(); torch.cuda.empty_cache()
+
+  log("=== NB2 preference data ===")
+  pds = load_dataset("argilla/ultrafeedback-binarized-preferences-cleaned", split=f"train[:{PREF_SLICE}]")
+  def pfmt(row):
+      pt = tok.apply_chat_template([{"role":"user","content":row["prompt"]}], tokenize=False, add_generation_prompt=True)
+      ch = row["chosen"][-1]["content"] if isinstance(row["chosen"], list) else row["chosen"]
+      rj = row["rejected"][-1]["content"] if isinstance(row["rejected"], list) else row["rejected"]
+      return {"prompt": pt, "chosen": ch, "rejected": rj}
+  pref = pds.map(pfmt, remove_columns=pds.column_names)
+  pref.to_parquet(str(PREF_DIR/"train.parquet"))
+  pref.select(range(len(pref)-50, len(pref))).to_parquet(str(PREF_DIR/"eval.parquet"))
+  log(f"saved {len(pref)} pairs -> {PREF_DIR/'train.parquet'}")
 
 log("=== NB3 DPO ===")
 from peft import PeftModel

@@ -155,6 +155,37 @@ Hyperparameters were held at spec throughout and never reduced to save time:
 `per_device_train_batch_size=1`, `gradient_accumulation_steps=8`, LoRA r=16 /
 alpha=32, 2000 preference pairs.
 
+### 3.4 NB5 merges the wrong adapter, and its claim contradicts its code
+
+`NB5` cell 94 is titled *"Stack SFT-mini -> DPO adapters"* and loads:
+
+```python
+model = PeftModel.from_pretrained(model, str(SFT_PATH))   # only SFT
+```
+
+`DPO_PATH` is never loaded. Yet the markdown immediately below says *"we apply
+both adapters before merging"*, and the merge cell's comment says *"re-loads the
+model with both SFT and DPO adapters merged"*. Both statements are false: the
+exported GGUF is the **SFT model wearing a DPO label**, containing no alignment.
+
+This is the most dangerous defect found, because it fails silently and produces
+a deployable-looking artifact.
+
+NB5 additionally crashes on reload:
+
+```
+AttributeError: Linear4bit has no attribute `base_layer`
+```
+
+The merged directory's `config.json` inherits `quantization_config` from the
+4-bit base, so `from_pretrained(..., load_in_4bit=False)` re-quantizes while the
+checkpoint on disk is fp16.
+
+**Fix:** `scripts/export_gguf.py` loads both adapters, strips
+`quantization_config` from the merged config, exports GGUF from the live handle
+(no reload), and **refuses to run** if `dpo_metrics.json` has
+`end_reward_gap: null`.
+
 ## 5. Environment note
 
 Kaggle's default GPU allocation for this account is a **Tesla P100 (sm_60)**,
